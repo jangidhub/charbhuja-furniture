@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #F8F6F2;
+    --bg-secondary: #F0ECE5;
+    --text-primary: #29231E;
+    --text-secondary: #77716A;
+    --brand-brown: #68452D;
+    --brand-brown-light: #A17A58;
+    --border-subtle: #E7E1D9;
+    --surface-white: #FFFFFF;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+/* Custom scrollbar and smooth transitions */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar for category and filter carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

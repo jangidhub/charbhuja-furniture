@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <script src="prefetch.js" defer></script>
+    <title>Log in — Charbhuja</title>
+</head>
+<body class="auth-page">
+
+    <a href="index.html" class="auth-back" aria-label="Back to home">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </a>
+
+    <div class="auth-card">
+
+        <!-- Logo -->
+        <a href="index.html" class="auth-logo">
+            <img src="assets/logo.png" alt="Charbhuja" height="32">
+            <span>Charbhuja</span>
+        </a>
+
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-sub">Sign in to continue</p>
+
+        <!-- Warning shown if opened via file:// protocol -->
+        <div id="fileProtocolWarning" style="display:none; background:#fff3cd; color:#856404; padding:12px 14px; border-radius:12px; font-size:12.5px; margin-bottom:18px; line-height:1.45; border:1px solid #ffeeba;">
+            ⚠️ <strong>Local Server Required:</strong> Firebase authentication cannot run from <code>file://</code> URLs. Please serve this folder via <code>npx serve</code> or VS Code Live Server and open <code>http://localhost:3000</code>.
+        </div>
+
+        <!-- Social sign-in -->
+        <div class="social-btns">
+            <button class="social-btn" id="googleBtn">
+                <!-- Google G icon -->
+                <svg width="18" height="18" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.6 2.3 30.1 0 24 0 14.8 0 7 5.4 3 13.3l7.8 6C13 13.5 18 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 7.1-10 7.1-17z"/>
+                    <path fill="#FBBC05" d="M10.8 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7L2.5 13.3A23.9 23.9 0 0 0 0 24c0 3.8.9 7.4 2.5 10.6l8.3-5.9z"/>
+                    <path fill="#34A853" d="M24 48c6.1 0 11.3-2 15-5.5l-7.5-5.8c-2 1.4-4.6 2.3-7.5 2.3-6 0-11-4-12.8-9.4l-8 6.1C7 43.5 15 48 24 48z"/>
+                </svg>
+                Continue with Google
+            </button>
+
+            <button class="social-btn" id="appleBtn">
+                <!-- Apple icon -->
+                <svg width="18" height="18" viewBox="0 0 814 1000" fill="currentColor">
+                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-37.5-165.5-120.7C77.3 759.3 32 583.3 32 420.6c0-176.4 115.4-269.3 227-269.3 59.8 0 109.6 39.5 147.4 39.5 35.9 0 92.3-41.7 160.1-41.7 25.8 0 108.2 2.6 162.8 76.1zm-85.3-220.4c35.9-45.1 61.3-107.4 61.3-169.7 0-9-.6-18.1-2.3-25.8-57.5 2.3-124.9 38.3-166.6 89.5-29 34.6-58.1 97.5-58.1 161.1 0 9.7 1.6 19.4 2.9 22.7 3.6.6 9.7 1.6 15.8 1.6 51.6 0 113.7-33.6 147.0-79.4z"/>
+                </svg>
+                Continue with Apple
+            </button>
+        </div>
+
+        <!-- Divider -->
+        <div class="auth-divider">
+            <span>or</span>
+        </div>
+
+        <!-- Phone sign-in flow -->
+        <!-- Step 1: Enter phone -->
+        <div id="phoneStep1">
+            <label class="auth-label" for="phoneInput">Mobile number</label>
+            <div class="phone-input-wrap">
+                <select class="country-code" id="countryCode" aria-label="Country code">
+                    <option value="+91">🇮🇳 +91</option>
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+61">🇦🇺 +61</option>
+                    <option value="+971">🇦🇪 +971</option>
+                    <option value="+65">🇸🇬 +65</option>
+                </select>
+                <input type="tel" id="phoneInput" class="auth-input phone-num-input" placeholder="98765 43210" inputmode="numeric" maxlength="10">
+            </div>
+            <!-- reCAPTCHA container (invisible) -->
+            <div id="recaptcha-container"></div>
+            <button class="auth-btn-primary" id="sendOtpBtn">Send OTP</button>
+        </div>
+
+        <!-- Step 2: Verify OTP -->
+        <div id="phoneStep2" style="display:none">
+            <p class="otp-prompt">Enter the 6-digit code sent to <strong id="sentToNumber"></strong></p>
+            <div class="otp-inputs" id="otpInputs">
+                <input class="otp-box" type="text" inputmode="numeric" maxlength="1">
+                <input class="otp-box" type="text" inputmode="numeric" maxlength="1">
+                <input class="otp-box" type="text" inputmode="numeric" maxlength="1">
+                <input class="otp-box" type="text" inputmode="numeric" maxlength="1">
+                <input class="otp-box" type="text" inputmode="numeric" maxlength="1">
+                <input class="otp-box" type="text" inputmode="numeric" maxlength="1">
+            </div>
+            <button class="auth-btn-primary" id="verifyOtpBtn">Verify</button>
+            <button class="auth-link-btn" id="resendOtpBtn">Resend OTP <span id="resendTimer"></span></button>
+            <button class="auth-link-btn" id="changeNumberBtn">Change number</button>
+        </div>
+
+        <!-- Error message -->
+        <p class="auth-error" id="authError" style="display:none"></p>
+
+        <!-- Footer -->
+        <p class="auth-footer">
+            New to Charbhuja? <a href="register.html">Create account</a>
+        </p>
+
+    </div><!-- /auth-card -->
+
+    <script type="module">
+        import {
+            auth, onAuthStateChanged,
+            signInWithGoogle, signInWithApple,
+            signInWithPhoneNumber, RecaptchaVerifier,
+            getUserProfile
+        } from "./firebase.js";
+
+        // If already logged in, redirect
+        onAuthStateChanged(auth, async user => {
+            if (user) {
+                const profile = await getUserProfile(user.uid);
+                // If new phone user, they still need to complete profile
+                if (user.providerData[0]?.providerId === 'phone' && (!profile?.displayName)) {
+                    window.location.href = 'register.html?step=profile';
+                } else {
+                    window.location.href = 'profile.html';
+                }
+            }
+        });
+
+        // Show protocol warning if file:// is used
+        if (window.location.protocol === 'file:') {
+            const w = document.getElementById('fileProtocolWarning');
+            if (w) w.style.display = 'block';
+        }
+
+        const formatAuthError = (e) => {
+            if (!e) return 'An unexpected error occurred.';
+            console.error('Firebase Auth Error:', e);
+            const code = e.code || '';
+            if (code === 'auth/operation-not-allowed') {
+                return 'Provider disabled: Go to Firebase Console → Authentication → Sign-in method and enable this provider (Google / Phone).';
+            }
+            if (code === 'auth/unauthorized-domain') {
+                return `Domain not authorized (${window.location.hostname || 'file://'}): Add it to Firebase Console → Authentication → Settings → Authorized domains.`;
+            }
+            if (code === 'auth/popup-blocked') {
+                return 'Popup was blocked by your browser. Please allow popups for this site and try again.';
+            }
+            if (code === 'auth/popup-closed-by-user') {
+                return 'Sign-in popup was closed before completion.';
+            }
+            if (code === 'auth/invalid-phone-number') {
+                return 'Invalid mobile number. Please check country code and digits.';
+            }
+            if (code === 'auth/invalid-verification-code') {
+                return 'Invalid OTP code. Please check and try again.';
+            }
+            if (code === 'auth/captcha-check-failed' || code === 'auth/invalid-app-credential') {
+                return 'reCAPTCHA check failed. Note: Phone Auth requires running on http://localhost or HTTPS, not file://.';
+            }
+            if (window.location.protocol === 'file:') {
+                return 'Firebase cannot run directly from file://. Please run "npx serve" in terminal and open http://localhost:3000.';
+            }
+            return e.message || 'Authentication failed. Check browser console for details.';
+        };
+
+        const showError = (msg) => {
+            const el = document.getElementById('authError');
+            el.textContent = typeof msg === 'string' ? msg : formatAuthError(msg);
+            el.style.display = 'block';
+        };
+        const hideError = () => { document.getElementById('authError').style.display = 'none'; };
+
+        // ── Google ──────────────────────────────────────────────
+        document.getElementById('googleBtn').addEventListener('click', async () => {
+            hideError();
+            try {
+                await signInWithGoogle();
+                window.location.href = 'profile.html';
+            } catch (e) {
+                showError(e);
+            }
+        });
+
+        // ── Apple ───────────────────────────────────────────────
+        document.getElementById('appleBtn').addEventListener('click', async () => {
+            hideError();
+            try {
+                await signInWithApple();
+                window.location.href = 'profile.html';
+            } catch (e) {
+                showError(e);
+            }
+        });
+
+        // ── Phone OTP ───────────────────────────────────────────
+        let confirmationResult = null;
+        let resendInterval = null;
+
+        function getRecaptchaVerifier() {
+            if (!window.recaptchaVerifier) {
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                    size: 'invisible',
+                    callback: () => {},
+                });
+            }
+            return window.recaptchaVerifier;
+        }
+
+        document.getElementById('sendOtpBtn').addEventListener('click', async () => {
+            hideError();
+            const code   = document.getElementById('countryCode').value;
+            const number = document.getElementById('phoneInput').value.replace(/\s/g, '');
+            if (number.length < 7) return showError('Enter a valid mobile number.');
+            const full = code + number;
+            document.getElementById('sendOtpBtn').textContent = 'Sending…';
+            document.getElementById('sendOtpBtn').disabled = true;
+            try {
+                const verifier = getRecaptchaVerifier();
+                confirmationResult = await signInWithPhoneNumber(auth, full, verifier);
+                document.getElementById('sentToNumber').textContent = full;
+                document.getElementById('phoneStep1').style.display = 'none';
+                document.getElementById('phoneStep2').style.display = 'block';
+                startResendTimer();
+            } catch (e) {
+                showError(e);
+                document.getElementById('sendOtpBtn').textContent = 'Send OTP';
+                document.getElementById('sendOtpBtn').disabled = false;
+            }
+        });
+
+        // OTP box auto-advance
+        document.querySelectorAll('.otp-box').forEach((box, i, boxes) => {
+            box.addEventListener('input', () => {
+                if (box.value && i < boxes.length - 1) boxes[i + 1].focus();
+            });
+            box.addEventListener('keydown', e => {
+                if (e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
+            });
+        });
+
+        document.getElementById('verifyOtpBtn').addEventListener('click', async () => {
+            hideError();
+            const otp = [...document.querySelectorAll('.otp-box')].map(b => b.value).join('');
+            if (otp.length < 6) return showError('Enter the complete 6-digit code.');
+            document.getElementById('verifyOtpBtn').textContent = 'Verifying…';
+            document.getElementById('verifyOtpBtn').disabled = true;
+            try {
+                await confirmationResult.confirm(otp);
+                // Check if profile complete
+                const user = auth.currentUser;
+                const profile = await getUserProfile(user.uid);
+                if (!profile?.displayName) {
+                    window.location.href = 'register.html?step=profile';
+                } else {
+                    window.location.href = 'profile.html';
+                }
+            } catch (e) {
+                showError(e);
+                document.getElementById('verifyOtpBtn').textContent = 'Verify';
+                document.getElementById('verifyOtpBtn').disabled = false;
+            }
+        });
+
+        document.getElementById('changeNumberBtn').addEventListener('click', () => {
+            document.getElementById('phoneStep2').style.display = 'none';
+            document.getElementById('phoneStep1').style.display = 'block';
+            document.getElementById('sendOtpBtn').textContent = 'Send OTP';
+            document.getElementById('sendOtpBtn').disabled = false;
+            clearInterval(resendInterval);
+        });
+
+        document.getElementById('resendOtpBtn').addEventListener('click', async () => {
+            document.getElementById('sendOtpBtn').click();
+        });
+
+        function startResendTimer() {
+            let seconds = 30;
+            const timerEl = document.getElementById('resendTimer');
+            const btn = document.getElementById('resendOtpBtn');
+            btn.disabled = true;
+            timerEl.textContent = `(${seconds}s)`;
+            resendInterval = setInterval(() => {
+                seconds--;
+                timerEl.textContent = `(${seconds}s)`;
+                if (seconds <= 0) {
+                    clearInterval(resendInterval);
+                    timerEl.textContent = '';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        }
+    </script>
+
+</body>
+</html>
+

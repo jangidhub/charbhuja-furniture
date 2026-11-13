@@ -1,0 +1,21 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Custom user furniture ideas & floor plans
+    match /custom-ideas/{userId}/{allPaths=**} {
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        request.auth.token.email == 'sudhanshujangid143@gmail.com'
+      );
+      allow write: if request.auth != null && request.auth.uid == userId
+                   && request.resource.size < 15 * 1024 * 1024
+                   && (request.resource.contentType.matches('image/.*') || request.resource.contentType == 'application/pdf');
+    }
+
+    // Public product images
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'sudhanshujangid143@gmail.com';
+    }
+  }
+}

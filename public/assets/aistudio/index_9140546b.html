@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <script>
+        try { if (localStorage.getItem('charbhuja_auth_user')) document.documentElement.classList.add('is-auth'); } catch(e) {}
+    </script>
+    <script src="prefetch.js" defer></script>
+    <title>Charbhuja — Furniture made to stay</title>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo-section">
+                <img class="logo" src="assets/logo.png" alt="Charbhuja Logo">
+                <span class="logo-title">Charbhuja</span>
+            </a>
+            <nav class="navbar" aria-label="Main Navigation">
+                <a href="browse.html">Browse</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <!-- AUTH ZONE: JS swaps between logged-in / logged-out states -->
+            <div class="auth-zone" id="authZone">
+                <!-- Logged-out state (default) -->
+                <div class="auth-guest" id="authGuest">
+                    <a href="login.html" class="btn-login">Log in</a>
+                    <a href="register.html" class="btn-register">Sign up</a>
+                </div>
+                <!-- Logged-in state (hidden by default) -->
+                <a href="profile.html" class="profile" id="authUser" style="display:none" aria-label="Profile">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Furniture,<br />made to stay.</h1>
+                <p>Solid wood. Simple forms. Delivered across India.</p>
+                <div class="btns">
+                    <a href="browse.html" class="explore-products">Explore Products</a>
+                    <button class="upload-yours">Upload yours</button>
+                </div>
+
+                <!-- Category strip with SVGs -->
+                <div class="category-strip">
+
+                    <a href="browse.html?cat=sofas" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Sofas">
+                                <rect x="25" y="35" width="150" height="52" rx="16" fill="#1d1d1f"/>
+                                <rect x="10" y="52" width="34" height="48" rx="13" fill="#1d1d1f"/>
+                                <rect x="156" y="52" width="34" height="48" rx="13" fill="#1d1d1f"/>
+                                <rect x="38" y="61" width="58" height="30" rx="8" fill="#3a3a3c"/>
+                                <rect x="104" y="61" width="58" height="30" rx="8" fill="#3a3a3c"/>
+                                <rect x="30" y="100" width="5" height="16" rx="2.5" fill="#1d1d1f"/>
+                                <rect x="165" y="100" width="5" height="16" rx="2.5" fill="#1d1d1f"/>
+                            </svg>
+                        </div>
+                        <span>Sofas</span>
+                    </a>
+
+                    <a href="browse.html?cat=beds" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Beds">
+                                <rect x="20" y="70" width="160" height="30" rx="6" fill="#1d1d1f"/>
+                                <rect x="20" y="38" width="160" height="36" rx="10" fill="#1d1d1f"/>
+                                <rect x="24" y="52" width="152" height="22" rx="5" fill="#3a3a3c"/>
+                                <rect x="32" y="54" width="40" height="14" rx="5" fill="#5a5a5e"/>
+                                <rect x="128" y="54" width="40" height="14" rx="5" fill="#5a5a5e"/>
+                                <rect x="28" y="100" width="6" height="16" rx="3" fill="#1d1d1f"/>
+                                <rect x="166" y="100" width="6" height="16" rx="3" fill="#1d1d1f"/>
+                            </svg>
+                        </div>
+                        <span>Beds</span>
+                    </a>
+
+                    <a href="browse.html?cat=chairs" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Chairs">
+                                <rect x="62" y="22" width="76" height="52" rx="12" fill="#1d1d1f"/>
+                                <rect x="52" y="66" width="96" height="22" rx="8" fill="#1d1d1f"/>
+                                <rect x="70" y="30" width="60" height="36" rx="8" fill="#3a3a3c"/>
+                                <rect x="62" y="88" width="6" height="30" rx="3" fill="#1d1d1f"/>
+                                <rect x="132" y="88" width="6" height="30" rx="3" fill="#1d1d1f"/>
+                                <rect x="68" y="88" width="64" height="4" rx="2" fill="#3a3a3c"/>
+                            </svg>
+                        </div>
+                        <span>Chairs</span>
+                    </a>
+
+                    <a href="browse.html?cat=wardrobes" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Wardrobes">
+                                <rect x="30" y="20" width="140" height="96" rx="6" fill="#1d1d1f"/>
+                                <rect x="34" y="24" width="62" height="88" rx="4" fill="#2d2d2f"/>
+                                <rect x="104" y="24" width="62" height="88" rx="4" fill="#2d2d2f"/>
+                                <rect x="90" y="62" width="5" height="16" rx="2.5" fill="#6e6e73"/>
+                                <rect x="105" y="62" width="5" height="16" rx="2.5" fill="#6e6e73"/>
+                                <rect x="38" y="112" width="10" height="8" rx="2" fill="#3a3a3c"/>
+                                <rect x="152" y="112" width="10" height="8" rx="2" fill="#3a3a3c"/>
+                            </svg>
+                        </div>
+                        <span>Wardrobes</span>
+                    </a>
+
+                    <a href="browse.html?cat=walkin" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Walk-in Wardrobes">
+                                <!-- Room outline -->
+                                <rect x="10" y="15" width="180" height="100" rx="4" fill="#1d1d1f"/>
+                                <!-- Left section doors -->
+                                <rect x="14" y="19" width="38" height="92" rx="3" fill="#2d2d2f"/>
+                                <rect x="56" y="19" width="38" height="92" rx="3" fill="#2d2d2f"/>
+                                <!-- Right section shelving -->
+                                <rect x="98" y="19" width="88" height="92" rx="3" fill="#252527"/>
+                                <rect x="102" y="30" width="80" height="4" rx="2" fill="#3a3a3c"/>
+                                <rect x="102" y="50" width="80" height="4" rx="2" fill="#3a3a3c"/>
+                                <rect x="102" y="70" width="80" height="4" rx="2" fill="#3a3a3c"/>
+                                <rect x="102" y="90" width="80" height="4" rx="2" fill="#3a3a3c"/>
+                                <!-- Clothes on rod -->
+                                <line x1="104" y1="30" x2="178" y2="30" stroke="#5a5a5e" stroke-width="1.5"/>
+                                <rect x="112" y="32" width="6" height="16" rx="2" fill="#6e6e73"/>
+                                <rect x="122" y="32" width="6" height="16" rx="2" fill="#5a5a5e"/>
+                                <rect x="132" y="32" width="6" height="16" rx="2" fill="#6e6e73"/>
+                                <rect x="142" y="32" width="6" height="16" rx="2" fill="#86868b"/>
+                                <rect x="152" y="32" width="6" height="16" rx="2" fill="#5a5a5e"/>
+                                <!-- Handles -->
+                                <rect x="48" y="61" width="4" height="12" rx="2" fill="#6e6e73"/>
+                                <rect x="90" y="61" width="4" height="12" rx="2" fill="#6e6e73"/>
+                            </svg>
+                        </div>
+                        <span>Walk-in</span>
+                    </a>
+
+                    <a href="browse.html?cat=kitchen" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Kitchen">
+                                <!-- Counter base -->
+                                <rect x="10" y="70" width="180" height="45" rx="5" fill="#1d1d1f"/>
+                                <!-- Counter top -->
+                                <rect x="10" y="64" width="180" height="10" rx="3" fill="#2d2d2f"/>
+                                <!-- Upper cabinets -->
+                                <rect x="10" y="15" width="80" height="44" rx="4" fill="#1d1d1f"/>
+                                <rect x="96" y="15" width="94" height="44" rx="4" fill="#1d1d1f"/>
+                                <!-- Cabinet doors upper -->
+                                <rect x="14" y="19" width="36" height="36" rx="3" fill="#2d2d2f"/>
+                                <rect x="54" y="19" width="32" height="36" rx="3" fill="#2d2d2f"/>
+                                <rect x="100" y="19" width="42" height="36" rx="3" fill="#2d2d2f"/>
+                                <rect x="146" y="19" width="40" height="36" rx="3" fill="#2d2d2f"/>
+                                <!-- Cabinet doors lower -->
+                                <rect x="14" y="75" width="38" height="34" rx="3" fill="#2d2d2f"/>
+                                <rect x="56" y="75" width="38" height="34" rx="3" fill="#2d2d2f"/>
+                                <rect x="98" y="75" width="44" height="34" rx="3" fill="#2d2d2f"/>
+                                <rect x="146" y="75" width="40" height="34" rx="3" fill="#2d2d2f"/>
+                                <!-- Handles lower -->
+                                <rect x="30" y="90" width="14" height="3" rx="1.5" fill="#6e6e73"/>
+                                <rect x="72" y="90" width="14" height="3" rx="1.5" fill="#6e6e73"/>
+                                <rect x="116" y="90" width="14" height="3" rx="1.5" fill="#6e6e73"/>
+                                <rect x="158" y="90" width="14" height="3" rx="1.5" fill="#6e6e73"/>
+                                <!-- Sink -->
+                                <rect x="58" y="66" width="84" height="6" rx="2" fill="#3a3a3c"/>
+                            </svg>
+                        </div>
+                        <span>Kitchens</span>
+                    </a>
+
+                    <a href="browse.html?cat=tvunits" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="TV Units">
+                                <!-- Main body -->
+                                <rect x="15" y="60" width="170" height="52" rx="5" fill="#1d1d1f"/>
+                                <!-- TV screen -->
+                                <rect x="40" y="15" width="120" height="44" rx="5" fill="#1d1d1f"/>
+                                <rect x="44" y="19" width="112" height="36" rx="3" fill="#2d2d2f"/>
+                                <!-- TV stand neck -->
+                                <rect x="96" y="59" width="8" height="8" rx="2" fill="#2d2d2f"/>
+                                <!-- Cabinet sections -->
+                                <rect x="19" y="64" width="50" height="44" rx="3" fill="#2d2d2f"/>
+                                <rect x="131" y="64" width="50" height="44" rx="3" fill="#2d2d2f"/>
+                                <!-- Open middle shelf -->
+                                <rect x="73" y="85" width="54" height="4" rx="2" fill="#3a3a3c"/>
+                                <!-- Handles -->
+                                <rect x="40" y="84" width="8" height="3" rx="1.5" fill="#6e6e73"/>
+                                <rect x="152" y="84" width="8" height="3" rx="1.5" fill="#6e6e73"/>
+                                <!-- Legs -->
+                                <rect x="26" y="108" width="6" height="12" rx="3" fill="#2d2d2f"/>
+                                <rect x="168" y="108" width="6" height="12" rx="3" fill="#2d2d2f"/>
+                            </svg>
+                        </div>
+                        <span>TV Units</span>
+                    </a>
+
+                    <a href="browse.html?cat=doors" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Flush Doors">
+                                <!-- Door frame -->
+                                <rect x="52" y="8" width="96" height="114" rx="4" fill="#2d2d2f"/>
+                                <!-- Door surface -->
+                                <rect x="56" y="12" width="88" height="106" rx="3" fill="#1d1d1f"/>
+                                <!-- Flush panels (subtle inset) -->
+                                <rect x="62" y="18" width="76" height="44" rx="2" fill="#252527"/>
+                                <rect x="62" y="68" width="76" height="44" rx="2" fill="#252527"/>
+                                <!-- Handle -->
+                                <rect x="122" y="58" width="5" height="20" rx="2.5" fill="#6e6e73"/>
+                                <circle cx="124.5" cy="57" r="3" fill="#86868b"/>
+                            </svg>
+                        </div>
+                        <span>Flush Doors</span>
+                    </a>
+
+                    <a href="browse.html?cat=stools" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Stools">
+                                <!-- Seat -->
+                                <rect x="55" y="38" width="90" height="18" rx="9" fill="#1d1d1f"/>
+                                <!-- Legs -->
+                                <rect x="68" y="56" width="8" height="52" rx="4" fill="#1d1d1f"/>
+                                <rect x="124" y="56" width="8" height="52" rx="4" fill="#1d1d1f"/>
+                                <!-- Cross bar -->
+                                <rect x="76" y="78" width="48" height="5" rx="2.5" fill="#3a3a3c"/>
+                                <!-- Foot rest circle -->
+                                <ellipse cx="100" cy="108" rx="40" ry="4" fill="#e8e8ed" opacity="0.3"/>
+                            </svg>
+                        </div>
+                        <span>Stools</span>
+                    </a>
+
+                    <a href="browse.html?cat=dining" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Dining Tables">
+                                <rect x="20" y="52" width="160" height="14" rx="7" fill="#1d1d1f"/>
+                                <rect x="36" y="66" width="8" height="40" rx="4" fill="#1d1d1f"/>
+                                <rect x="156" y="66" width="8" height="40" rx="4" fill="#1d1d1f"/>
+                                <rect x="8" y="72" width="24" height="5" rx="2.5" fill="#3a3a3c"/>
+                                <rect x="10" y="77" width="4" height="22" rx="2" fill="#3a3a3c"/>
+                                <rect x="28" y="77" width="4" height="22" rx="2" fill="#3a3a3c"/>
+                                <rect x="8" y="62" width="24" height="12" rx="4" fill="#3a3a3c"/>
+                                <rect x="168" y="72" width="24" height="5" rx="2.5" fill="#3a3a3c"/>
+                                <rect x="170" y="77" width="4" height="22" rx="2" fill="#3a3a3c"/>
+                                <rect x="188" y="77" width="4" height="22" rx="2" fill="#3a3a3c"/>
+                                <rect x="168" y="62" width="24" height="12" rx="4" fill="#3a3a3c"/>
+                            </svg>
+                        </div>
+                        <span>Dining</span>
+                    </a>
+
+                    <a href="browse.html?cat=desks" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Study Desks">
+                                <rect x="18" y="52" width="164" height="12" rx="6" fill="#1d1d1f"/>
+                                <rect x="18" y="64" width="10" height="52" rx="4" fill="#2d2d2f"/>
+                                <rect x="172" y="64" width="6" height="52" rx="3" fill="#1d1d1f"/>
+                                <rect x="28" y="70" width="50" height="38" rx="4" fill="#2d2d2f"/>
+                                <rect x="31" y="74" width="44" height="14" rx="3" fill="#3a3a3c"/>
+                                <rect x="31" y="92" width="44" height="14" rx="3" fill="#3a3a3c"/>
+                                <rect x="102" y="24" width="52" height="30" rx="4" fill="#1d1d1f"/>
+                                <rect x="105" y="27" width="46" height="24" rx="2" fill="#3a3a3c"/>
+                                <rect x="92" y="58" width="68" height="8" rx="3" fill="#3a3a3c"/>
+                            </svg>
+                        </div>
+                        <span>Desks</span>
+                    </a>
+
+                    <a href="browse.html?cat=shelves" class="strip-item">
+                        <div class="strip-svg">
+                            <svg viewBox="0 0 200 130" aria-label="Bookshelves">
+                                <rect x="40" y="14" width="120" height="102" rx="5" fill="#1d1d1f"/>
+                                <rect x="40" y="46" width="120" height="5" rx="2" fill="#3a3a3c"/>
+                                <rect x="40" y="78" width="120" height="5" rx="2" fill="#3a3a3c"/>
+                                <rect x="48" y="22" width="10" height="22" rx="2" fill="#6e6e73"/>
+                                <rect x="62" y="26" width="8" height="18" rx="2" fill="#5a5a5e"/>
+                                <rect x="74" y="20" width="12" height="24" rx="2" fill="#86868b"/>
+                                <rect x="90" y="24" width="9" height="20" rx="2" fill="#5a5a5e"/>
+                                <rect x="103" y="22" width="11" height="22" rx="2" fill="#6e6e73"/>
+                                <rect x="118" y="27" width="8" height="17" rx="2" fill="#3a3a3c"/>
+                                <rect x="130" y="21" width="10" height="23" rx="2" fill="#86868b"/>
+                                <rect x="48" y="86" width="30" height="22" rx="3" fill="#2d2d2f"/>
+                                <rect x="122" y="86" width="30" height="22" rx="3" fill="#2d2d2f"/>
+                            </svg>
+                        </div>
+                        <span>Shelves</span>
+                    </a>
+
+                </div>
+            </div>
+
+            <a href="browse.html" class="scroll-indicator" aria-label="Browse all">
+                <span class="scroll-text">Browse All</span>
+                <span class="scroll-arrow" aria-hidden="true"></span>
+            </a>
+        </section>
+    </main>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="mobile-nav" aria-label="Mobile Navigation">
+        <a href="index.html" class="mobile-nav-item active">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Home</span>
+        </a>
+        <a href="browse.html" class="mobile-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            <span>Browse</span>
+        </a>
+        <a href="profile.html" class="mobile-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import { auth, onAuthStateChanged } from "./firebase.js";
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                document.getElementById('authGuest').style.display = 'none';
+                document.getElementById('authUser').style.display  = 'flex';
+            }
+        });
+    </script>
+</body>
+</html>

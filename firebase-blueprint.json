@@ -1,0 +1,132 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile data stored per authenticated user",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "format": "email", "maxLength": 150 },
+        "phoneNumber": { "type": "string", "maxLength": 25 },
+        "role": { "type": "string", "enum": ["customer", "admin"] },
+        "addresses": { "type": "array" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Curated and trending furniture items listed by admin",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "category": { "type": "string", "maxLength": 60 },
+        "price": { "type": "number" },
+        "images": { "type": "array" },
+        "isTrending": { "type": "boolean" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["productId", "name", "price", "category", "isActive"]
+    },
+    "CustomIdeaRequest": {
+      "title": "CustomIdeaRequest",
+      "description": "User uploaded furniture ideas, photos, descriptions, and visit/quote bookings",
+      "type": "object",
+      "properties": {
+        "requestId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 25 },
+        "customerEmail": { "type": "string", "format": "email", "maxLength": 150 },
+        "itemType": { "type": "string", "maxLength": 50 },
+        "description": { "type": "string", "maxLength": 2500 },
+        "estimatedBudget": { "type": "string", "maxLength": 100 },
+        "imageUrl": { "type": "string", "maxLength": 1000 },
+        "requestType": { "type": "string", "enum": ["quote", "book_visit", "both"] },
+        "visitAddress": { "type": "string", "maxLength": 300 },
+        "preferredVisitDate": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "maxLength": 40 },
+        "quotedAmount": { "type": "string", "maxLength": 50 },
+        "internalNotes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["requestId", "userId", "customerName", "customerPhone", "itemType", "status"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer orders submitted for manual confirmation",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string", "maxLength": 128 },
+        "orderNumber": { "type": "string", "maxLength": 50 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 25 },
+        "customerEmail": { "type": "string", "format": "email", "maxLength": 150 },
+        "customerSnapshot": { "type": "object" },
+        "deliveryAddress": { "type": "string", "maxLength": 400 },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "deliveryCharge": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "paymentStatus": { "type": "string", "maxLength": 40 },
+        "orderStatus": { "type": "string", "maxLength": 40 },
+        "statusHistory": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["orderId", "orderNumber", "userId", "totalAmount", "orderStatus"]
+    },
+    "CustomerProject": {
+      "title": "CustomerProject",
+      "description": "Customer project collections organizing saved designs and room specifications",
+      "type": "object",
+      "properties": {
+        "projectId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "roomType": { "type": "string", "maxLength": 60 },
+        "productIds": { "type": "array" },
+        "targetTimeline": { "type": "string", "maxLength": 60 },
+        "budget": { "type": "string", "maxLength": 100 },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["projectId", "userId", "name"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profiles restricted to owner and administrators"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "List of authorized administrator user IDs"
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Curated catalog publicly readable, writable only by admins"
+    },
+    "/customRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/CustomIdeaRequest" },
+      "description": "Custom idea uploads, visit bookings, and quotes"
+    },
+    "/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/CustomerProject" },
+      "description": "Customer project collections accessible to owner and administrators"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer furniture orders"
+    }
+  }
+}

@@ -1,0 +1,189 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ── Global Helper Primitives ────────────────────────────────
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'sudhanshujangid143@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // ── Validation Helpers ───────────────────────────────────────
+    function isValidUser(data) {
+      return data.uid is string && data.uid.size() > 0 && data.uid.size() <= 128 &&
+             data.email is string && data.email.size() > 0 && data.email.size() <= 150 &&
+             (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 100)) &&
+             (!('phoneNumber' in data) || (data.phoneNumber is string && data.phoneNumber.size() <= 25)) &&
+             (!('role' in data) || data.role in ['customer', 'admin']) &&
+             (!('addresses' in data) || (data.addresses is list && data.addresses.size() <= 20));
+    }
+
+    function isValidProduct(data) {
+      return data.productId is string && data.productId.size() > 0 && data.productId.size() <= 128 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 150 &&
+             data.price is number && data.price >= 0 &&
+             data.isActive is bool &&
+             (!('categoryId' in data) || (data.categoryId is string && data.categoryId.size() <= 60)) &&
+             (!('category' in data) || (data.category is string && data.category.size() <= 60)) &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 2500)) &&
+             (!('images' in data) || (data.images is list && data.images.size() <= 20));
+    }
+
+    function isValidProject(data) {
+      return data.projectId is string && data.projectId.size() > 0 && data.projectId.size() <= 128 &&
+             data.userId is string && data.userId.size() > 0 && data.userId.size() <= 128 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 120 &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 1000)) &&
+             (!('roomType' in data) || (data.roomType is string && data.roomType.size() <= 60)) &&
+             (!('productIds' in data) || (data.productIds is list && data.productIds.size() <= 50)) &&
+             (!('targetTimeline' in data) || (data.targetTimeline is string && data.targetTimeline.size() <= 60)) &&
+             (!('budget' in data) || (data.budget is string && data.budget.size() <= 100)) &&
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 2000));
+    }
+
+    function isValidCustomRequest(data) {
+      return data.requestId is string && data.requestId.size() > 0 && data.requestId.size() <= 128 &&
+             data.userId is string && data.userId.size() > 0 && data.userId.size() <= 128 &&
+             data.customerName is string && data.customerName.size() > 0 && data.customerName.size() <= 100 &&
+             data.customerPhone is string && data.customerPhone.size() > 0 && data.customerPhone.size() <= 25 &&
+             data.itemType is string && data.itemType.size() > 0 && data.itemType.size() <= 50 &&
+             data.status is string && data.status.size() > 0 && data.status.size() <= 40 &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 3000)) &&
+             (!('estimatedBudget' in data) || (data.estimatedBudget is string && data.estimatedBudget.size() <= 100)) &&
+             (!('imageUrl' in data) || (data.imageUrl is string && data.imageUrl.size() <= 1000)) &&
+             (!('projectId' in data) || (data.projectId is string && data.projectId.size() <= 128)) &&
+             (!('timberPreference' in data) || (data.timberPreference is string && data.timberPreference.size() <= 100)) &&
+             (!('roomDimensions' in data) || (data.roomDimensions is string && data.roomDimensions.size() <= 100)) &&
+             (!('attachments' in data) || (data.attachments is list && data.attachments.size() <= 10));
+    }
+
+    function isValidOrder(data) {
+      return data.orderId is string && data.orderId.size() > 0 && data.orderId.size() <= 128 &&
+             data.orderNumber is string && data.orderNumber.size() > 0 && data.orderNumber.size() <= 50 &&
+             data.userId is string && data.userId.size() > 0 && data.userId.size() <= 128 &&
+             data.totalAmount is number && data.totalAmount >= 0 &&
+             data.orderStatus is string && data.orderStatus.size() > 0 && data.orderStatus.size() <= 40 &&
+             (!('customerName' in data) || (data.customerName is string && data.customerName.size() <= 100)) &&
+             (!('customerPhone' in data) || (data.customerPhone is string && data.customerPhone.size() <= 25)) &&
+             (!('items' in data) || (data.items is list && data.items.size() <= 50)) &&
+             (!('statusHistory' in data) || (data.statusHistory is list && data.statusHistory.size() <= 50));
+    }
+
+    // ── Collection Rules ────────────────────────────────────────
+
+    // 1. Users
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && isValidUser(incoming()) && (
+        !('role' in incoming()) || incoming().role == 'customer' || isAdmin()
+      );
+      allow update: if (isOwner(userId) && isValidUser(incoming()) && (
+        !incoming().diff(existing()).affectedKeys().hasAny(['role'])
+      )) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 2. Admins Registry
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // 3. Products (Curated Trending Catalog)
+    match /products/{productId} {
+      allow get, list: if true; // Publicly readable catalog
+      allow create: if isAdmin() && isValidId(productId) && isValidProduct(incoming());
+      allow update: if isAdmin() && isValidId(productId) && isValidProduct(incoming());
+      allow delete: if isAdmin() && isValidId(productId);
+    }
+
+    // 4. Customer Project Collections
+    match /projects/{projectId} {
+      allow get: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (
+        isAdmin() || (resource.data.userId == request.auth.uid)
+      );
+      allow create: if isSignedIn() && isValidId(projectId) &&
+                    incoming().userId == request.auth.uid &&
+                    isValidProject(incoming());
+      allow update: if (isAdmin() || (
+        isSignedIn() && isValidId(projectId) &&
+        existing().userId == request.auth.uid &&
+        incoming().userId == existing().userId &&
+        isValidProject(incoming())
+      ));
+      allow delete: if isSignedIn() && isValidId(projectId) &&
+                    (existing().userId == request.auth.uid || isAdmin());
+    }
+
+    // 5. Custom Idea Requests & Visit Bookings
+    match /customRequests/{requestId} {
+      allow get: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (
+        isAdmin() || (resource.data.userId == request.auth.uid)
+      );
+      allow create: if isSignedIn() && isValidId(requestId) &&
+                    incoming().userId == request.auth.uid &&
+                    isValidCustomRequest(incoming());
+      allow update: if isAdmin() || (
+        isSignedIn() && existing().userId == request.auth.uid &&
+        incoming().userId == existing().userId &&
+        isValidCustomRequest(incoming()) &&
+        // Customer can only update non-admin fields or status
+        incoming().diff(existing()).affectedKeys().hasOnly(['description', 'estimatedBudget', 'preferredVisitDate', 'visitAddress', 'customerPhone', 'status'])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 6. Orders
+    match /orders/{orderId} {
+      allow get: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (
+        isAdmin() || (resource.data.userId == request.auth.uid)
+      );
+      allow create: if isSignedIn() && isValidId(orderId) &&
+                    incoming().userId == request.auth.uid &&
+                    isValidOrder(incoming());
+      allow update: if isAdmin() || (
+        isSignedIn() && existing().userId == request.auth.uid &&
+        incoming().userId == existing().userId &&
+        isValidOrder(incoming()) &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['deliveryAddress', 'customerPhone', 'orderStatus', 'statusHistory', 'updatedAt'])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 7. Test connection probe
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
